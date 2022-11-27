@@ -1,0 +1,73 @@
+[{
+
+    "id": "1",
+   "name":"Canon 5d mark ii",
+   "image":"https://www.seekpng.com/png/small/581-5810180_canon-eos-5d-mark-ii.png",
+   "location":"Golshan-1",
+   "resalePrice":"1050000",
+   "originalPrice":"2018000",
+   "sellerName":"Abir hossain",
+   "number":"01992223453",
+   "uses":"6 month",
+   "time":"7:59"
+},{
+
+    "id": "1",
+   "name":"Canon 6d mark ii",
+   "image":"https://www.the-digital-picture.com/Images/Review/Canon-EOS-6D-Mark-II.jpg",
+   "location":"Mohakhali",
+   "resalePrice":"80000",
+   "originalPrice":"140000",
+   "sellerName":"jamal",
+   "number":"0932432455",
+   "uses":"5 month",
+   "time":"8:11"
+},{
+    
+    "id": "2",
+    "name": "Sony A7 iv",
+    "image":"https://www.financialexpress.com/wp-content/uploads/2022/02/sony-7-iv.jpg?w=350",
+   "location":"Uttora",
+   "resalePrice":"250000",
+   "originalPrice":"400000",
+   "sellerName":"Harun",
+   "number":"032432444",
+   "uses":"1 year",
+   "time":"8:16"
+},{
+    
+    "id": "2",
+    "name": "Sony A7 iii",
+    "image":"https://5.imimg.com/data5/IW/OJ/MY-26482000/sony-alpha-a7r-iii-35-mm-full-frame-camera-with-autofocus-250x250.png",
+   "location":"Narayangong",
+   "resalePrice":"150000",
+   "originalPrice":"200000",
+   "sellerName":"Akib",
+   "number":"0145454666",
+   "uses":"7 month",
+   "time":"8:17"
+},{
+    
+    "id": "3",
+    "name": "Nikon D3200",
+    "image":"https://classyprice.com.bd/images/Nikon-D3200.jpg",
+   "location":"Jatrabari",
+   "resalePrice":"12000",
+   "originalPrice":"189000",
+   "sellerName":"Sajjad",
+   "number":"0144556656",
+   "uses":"4 month",
+   "time":"8:29"
+},{
+    
+    "id": "3",
+    "name": "Nikon D 90",
+    "image":"https://classyprice.com.bd/images/Nikon-D90.jpg",
+   "location":"Badda",
+   "resalePrice":"100000",
+   "originalPrice":"160000",
+   "sellerName":"Ibrahim",
+   "number":"0234344355",
+   "uses":"1 year",
+   "time":"7:76"
+}]
