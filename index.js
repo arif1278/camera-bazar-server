@@ -23,6 +23,8 @@ async function run() {
   try {
     const cameraOptionCollection = client.db('cameraBazar').collection('cameraOptions');
     const productCollection = client.db('cameraBazar').collection('products');
+    const bookingsCollection = client.db('cameraBazar').collection('bookings');
+    const usersCollection = client.db('cameraBazar').collection('users');
 
     app.get('/cameraOptions', async (req, res) => {
       const query = {};
@@ -36,35 +38,26 @@ async function run() {
       const product = await cursor.toArray();
       res.send(product);
     });
+    app.get('/bookings',async(req,res)=>{
+      const query={};
+      const bookings=await bookingsCollection.find(query).toArray();
+      res.send(bookings);
+    })
 
     app.post('/cameraOptions',async(req,res)=>{
       const booking=req.body;
       console.log(booking);
-      const result=await productCollection.insertOne(booking);
+      const result=await bookingsCollection.insertOne(booking);
+      res.send(result);
+    });
+
+
+    app.post('/users',async(req,res)=>{
+      const user=req.body;
+      const result=await usersCollection.insertOne(user);
       res.send(result);
     })
 
-
-    // app.get('/singlepage',async(req,res)=>{
-    //   const query={};
-    //   const products=await productCollection.find(query).toArray();
-    //   res.send(products);
-    // });
-    // app.get('/singlepage/:id',async(req,res)=>{
-    //   const id=req.query.id;
-    //   const query={id:ObjectId(id)};
-    //   const result=await productCollection.findOne(query);
-    //   res.send(result);
-    // });
-
-
-
-    // app.get('/bookings/:id',async(req,res)=>{
-    //   const id =req.params.id;
-    //   const query={_id:ObjectId(id)};
-    //   const booking =await bookingsCollection.findOne(query);
-    //   res.send(booking);
-    // })
 
   }
   finally {
