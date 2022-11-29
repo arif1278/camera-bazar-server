@@ -25,6 +25,7 @@ async function run() {
     const productCollection = client.db('cameraBazar').collection('products');
     const bookingsCollection = client.db('cameraBazar').collection('bookings');
     const usersCollection = client.db('cameraBazar').collection('users');
+    const addProductCollection = client.db('cameraBazar').collection('addProduct');
 
     app.get('/cameraOptions', async (req, res) => {
       const query = {};
@@ -42,7 +43,12 @@ async function run() {
       const query={};
       const bookings=await bookingsCollection.find(query).toArray();
       res.send(bookings);
-    })
+    });
+    app.get('/addproduct', async (req, res) => {
+      const query = {};
+      const options = await addProductCollection.find(query).toArray();
+      res.send(options);
+    });
 
     app.post('/cameraOptions',async(req,res)=>{
       const booking=req.body;
@@ -55,6 +61,13 @@ async function run() {
     app.post('/users',async(req,res)=>{
       const user=req.body;
       const result=await usersCollection.insertOne(user);
+      res.send(result);
+    });
+
+    app.post('/addproduct',async(req,res)=>{
+      const addProduct=req.body;
+      console.log(addProduct);
+      const result=await addProductCollection.insertOne(addProduct);
       res.send(result);
     })
 
