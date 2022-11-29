@@ -12,6 +12,30 @@ app.use(express.json());
 
 
 
+const verifyJWT = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+      return res.status(401).send({ message: 'Unauthorized User' })
+  }
+
+  const token = authHeader.split(' ')[1];
+  jwt.verify(token, process.env.JWT_ACCESS_TOKEN, function (err, decoded) {
+      if (err) {
+          return res.status(403).send({ message: 'Forbidden Access' })
+      }
+      req.decoded = decoded;
+      next()
+  })
+}
+
+app.get('/jwt', (req, res) => {
+  const email = req.query.email;
+  const token = jwt.sign({ email }, process.env.JWT_ACCESS_TOKEN, { expiresIn: '24h' });
+  res.send({ token });
+})
+
+
+
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.hroyggj.mongodb.net/?retryWrites=true&w=majority`;
@@ -26,9 +50,9 @@ async function run() {
     const usersCollection = client.db('cameraBazar').collection('users');
     const addProductCollection = client.db('cameraBazar').collection('addProduct');
     const productsCollection = client.db('cameraBazar').collection('products');
-    const ordersCollection = client.db("cadence-watches").collection("orders");
-    const paymentsCollection = client.db("cadence-watches").collection("payments");
-    const reportedProductsCollection = client.db("cadence-watches").collection("reportedProducts");
+    const ordersCollection = client.db("cameraBazar").collection("orders");
+    const paymentsCollection = client.db("cameraBazar").collection("payments");
+    const reportedProductsCollection = client.db("cameraBazar").collection("reportedProducts");
 
     app.get('/cameraOptions', async (req, res) => {
       const query = {};
