@@ -28,6 +28,7 @@ async function run() {
     const productsCollection = client.db('cameraBazar').collection('products');
     const ordersCollection = client.db("cadence-watches").collection("orders");
     const paymentsCollection = client.db("cadence-watches").collection("payments");
+    const reportedProductsCollection = client.db("cadence-watches").collection("reportedProducts");
 
     app.get('/cameraOptions', async (req, res) => {
       const query = {};
@@ -72,6 +73,51 @@ async function run() {
       const result = await addProductCollection.insertOne(addProduct);
       res.send(result);
     })
+
+
+
+    // delete & post report/products
+
+    app.delete('/products/:id', verifyJWT, verifySeller, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const queryOrder = { productId: id };
+      const deleteOrder = await ordersCollection.deleteMany(queryOrder);
+      const result = await productsCollection.deleteOne(query);
+      res.send(result);
+  })
+
+  app.post('/report/products', verifyJWT, async (req, res) => {
+      const reportedProduct = req.body;
+      const reporter = reportedProduct.reporter;
+      const productId = reportedProduct.productId;
+      const filter = { reporter: reporter, productId: productId };
+      const findReport = await reportedProductsCollection.findOne(filter);
+      if (findReport) {
+          res.send({ message: 'You have already reported this product!' });
+          return;
+      }
+      const result = await reportedProductsCollection.insertOne(reportedProduct);
+      res.send(result);
+  })
+
+  app.get('/report/products', verifyJWT, verifyAdmin, async (req, res) => {
+      const query = {}
+      const result = await reportedProductsCollection.find(query).toArray();
+      res.send(result);
+  })
+
+  app.delete('/report/products/:id', verifyJWT, verifyAdmin, async (req, res) => {
+      const productId = req.params.id;
+      const queryProduct = { _id: ObjectId(productId) };
+      const queryReport = { productId: productId };
+      const deleteProduct = await productsCollection.deleteOne(queryProduct);
+      const deleteOrder = await ordersCollection.deleteMany(queryReport);
+      const deleteReport = await reportedProductsCollection.deleteMany(queryReport);
+      res.send(deleteReport);
+  })
+
+
 
 
 
