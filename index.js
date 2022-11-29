@@ -74,6 +74,40 @@ async function run() {
     })
 
 
+
+    // get & post orders verifyJWT
+
+
+    app.post('/orders', verifyJWT, async (req, res) => {
+      const order = req.body;
+      const email = order.buyerEmail;
+      const productId = order.productId;
+      const query = { buyerEmail: email, productId: productId };
+      const findOrder = await ordersCollection.findOne(query);
+      if (findOrder) {
+          res.send({ message: 'You have already booked this product!' })
+          return;
+      }
+      const result = await ordersCollection.insertOne(order);
+      res.send(result);
+  })
+
+    app.get('/orders', verifyJWT, async (req, res) => {
+      const email = req.query.email;
+      const query = { buyerEmail: email };
+      const result = await ordersCollection.find(query).toArray();
+      res.send(result);
+  })
+
+  app.get('/orders/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await ordersCollection.findOne(query);
+      res.send(result);
+  })
+
+
+
     // payment post
 
 
