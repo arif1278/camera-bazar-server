@@ -22,10 +22,12 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
   try {
     const cameraOptionCollection = client.db('cameraBazar').collection('cameraOptions');
-    const productCollection = client.db('cameraBazar').collection('products');
     const bookingsCollection = client.db('cameraBazar').collection('bookings');
     const usersCollection = client.db('cameraBazar').collection('users');
     const addProductCollection = client.db('cameraBazar').collection('addProduct');
+    const productsCollection = client.db('cameraBazar').collection('products');
+    const ordersCollection = client.db("cadence-watches").collection("orders");
+    const paymentsCollection = client.db("cadence-watches").collection("payments");
 
     app.get('/cameraOptions', async (req, res) => {
       const query = {};
@@ -39,37 +41,67 @@ async function run() {
       const product = await cursor.toArray();
       res.send(product);
     });
-    app.get('/bookings',async(req,res)=>{
-      const query={};
-      const bookings=await bookingsCollection.find(query).toArray();
+    app.get('/bookings', async (req, res) => {
+      const query = {};
+      const bookings = await bookingsCollection.find(query).toArray();
       res.send(bookings);
     });
-    app.get('/addproduct', async (req, res) => {
+    app.get('/addproducts', async (req, res) => {
       const query = {};
       const options = await addProductCollection.find(query).toArray();
       res.send(options);
     });
 
-    app.post('/cameraOptions',async(req,res)=>{
-      const booking=req.body;
+    app.post('/cameraOptions', async (req, res) => {
+      const booking = req.body;
       console.log(booking);
-      const result=await bookingsCollection.insertOne(booking);
+      const result = await bookingsCollection.insertOne(booking);
       res.send(result);
     });
 
 
-    app.post('/users',async(req,res)=>{
-      const user=req.body;
-      const result=await usersCollection.insertOne(user);
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
       res.send(result);
     });
 
-    app.post('/addproduct',async(req,res)=>{
-      const addProduct=req.body;
+    app.post('/addproducts', async (req, res) => {
+      const addProduct = req.body;
       console.log(addProduct);
-      const result=await addProductCollection.insertOne(addProduct);
+      const result = await addProductCollection.insertOne(addProduct);
       res.send(result);
     })
+
+
+    // payment post
+
+
+    app.post('/payments', verifyJWT, async (req, res) => {
+      const payment = req.body;
+      const productId = payment.productId;
+      const filterProduct = { _id: ObjectId(productId) };
+      const updateProduct = {
+        $set: {
+          status: 'sold'
+        }
+      }
+      const updatedProduct = await productsCollection.updateOne(filterProduct, updateProduct);
+
+      const orderId = payment.orderId;
+      const filterOrder = { _id: ObjectId(orderId) };
+      const updateOrder = {
+        $set: {
+          status: 'paid'
+        }
+      }
+      const updatedOrder = await ordersCollection.updateOne(filterOrder, updateOrder);
+
+      const result = await paymentsCollection.insertOne(payment);
+      res.send(result);
+    })
+
+
 
 
   }
