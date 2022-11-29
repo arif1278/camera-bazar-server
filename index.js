@@ -99,6 +99,23 @@ async function run() {
     })
 
 
+    
+
+    // patch products/id
+
+    app.patch('/products/:id', verifyJWT, verifySeller, async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const updateProduct = {
+          $set: {
+              advertise: 'true'
+          }
+      }
+      const result = await productsCollection.updateOne(filter, updateProduct);
+      res.send(result);
+  })
+
+
 
     // delete & post report/products
 
